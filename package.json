@@ -1,0 +1,21 @@
+{
+  "name": "parse-url-from-xls",
+  "version": "0.0.0",
+  "main": "run.js",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/coderhaoxin/parse-url-from-xls.git"
+  },
+  "author": "haoxin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/coderhaoxin/parse-url-from-xls/issues"
+  },
+  "homepage": "https://github.com/coderhaoxin/parse-url-from-xls",
+  "dependencies": {
+    "jsdom": "^0.11.1",
+    "xlsjs": "^0.7.0",
+    "xlsx": "^0.7.7"
+  }
+}
