@@ -67,7 +67,7 @@ setTimeout(function() {
       data.title = data.title.replace(/\n/g, '');
       data.done = true;
 
-      // yield data.put();
+      yield data.put();
 
       console.log(i, data.title);
     }
