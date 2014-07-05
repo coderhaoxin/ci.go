@@ -19,8 +19,13 @@ var result = [];
 
 function getTitleFromUrl(url) {
   return function(done) {
+    console.log('start:', url);
+
     var t = setTimeout(function() {
       var e = new Error('timeout');
+
+      console.log('timeout 3000');
+
       done(e);
     }, 3000);
 
@@ -36,6 +41,8 @@ function getTitleFromUrl(url) {
         }
 
         clearTimeout(t);
+
+        console.log('get:', url);
 
         done(null, title);
       }
@@ -129,7 +136,7 @@ csv
 
         console.log(i);
 
-        if ((i >= 5000) && (i % 5000) === 0) {
+        if ((i >= 100) && (i % 100) === 0) {
           yield write(result, i);
 
           console.log(i, 'done');
