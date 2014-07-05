@@ -28,12 +28,24 @@ function getTitleFromUrl(url) {
         try {
           title = window.document.querySelector('title').text;
         } catch (e) {
-          console.error(e);
+          debug('error:', e);
         }
 
         done(null, title);
       }
     });
+  };
+}
+
+function write(data) {
+  return function(done) {
+    csv
+      .writeToPath(config.dist, data, {
+        headers: true
+      })
+      .on('finish', function() {
+        done();
+      });
   };
 }
 
@@ -43,19 +55,13 @@ csv
     origin.push(data);
   })
   .on('end', function() {
-    console.log('done');
+    console.log('parse csv done');
 
     co(function * () {
       var url01, url02, url03, url04, url05, data01, data02, data03, data04, data05;
 
-      var csvStream = csv.createWriteStream({headers:true}),
-      writableStream = fs.createWriteStream(config.dist);
-      writableStream.on('finished', function() {
-          console.info('finished');
-        });
-      csvStream.pipe(writableStream);
-
       for (var i = 0; i < origin.length; i += 5) {
+        if (i > 50) break;
         data01 = origin[i];
         data02 = origin[i + 1];
         data03 = origin[i + 2];
@@ -69,9 +75,8 @@ csv
           url04 = data04[8].split('=')[1];
           url05 = data05[8].split('=')[1];
         } catch (e) {
-          console.error(e);
+          debug('error:', e);
         }
-        console.log(i);
 
         var titles,
           title01 = '无标题',
@@ -99,7 +104,7 @@ csv
           title04 = titles[3].value || '无标题';
           title05 = titles[4].value || '无标题';
         } catch (e) {
-          console.error(e);
+          debug('error:', e);
         }
 
         data01.push(title01);
@@ -108,11 +113,17 @@ csv
         data04.push(title04);
         data05.push(title05);
 
-        csvStream.write(data01);
-        csvStream.write(data02);
-        csvStream.write(data03);
-        csvStream.write(data04);
-        csvStream.write(data05);
+        result.push(data01);
+        result.push(data02);
+        result.push(data03);
+        result.push(data04);
+        result.push(data05);
+
+        yield write(result);
+
+        console.log(i, 'done');
+
+        result = [];
       }
     })();
   });
