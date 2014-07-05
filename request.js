@@ -4,8 +4,7 @@ var config = require('./config'),
   path = require('path'),
   debug = require('debug')('parse:run'),
   co = require('co'),
-  dom = require('jsdom'),
-  csv = require('fast-csv');
+  dom = require('jsdom');
 
 var filepath = path.resolve(__dirname, config.file),
   extname = path.extname(config.file);
@@ -13,7 +12,7 @@ debug('filepath: %s, extname %s', filepath, extname);
 
 function getTitleFromUrl(url) {
   return function(done) {
-    console.log('start:', url);
+    // console.log('start:', url);
 
     var t = setTimeout(function() {
       var e = new Error('timeout');
@@ -36,13 +35,14 @@ function getTitleFromUrl(url) {
 
         clearTimeout(t);
 
-        console.log('get:', url);
+        // console.log('get:', url);
 
         done(null, title);
       }
     });
   };
 }
+
 var mongoose = require('mongoose');
 require('./to-db');
 var Data = mongoose.model('data');
@@ -62,18 +62,26 @@ function * getTitle(url) {
 
 setTimeout(function() {
 
-co(function * () {
-  var datas = Data.findOne({}).limit(5).exec();
+  co(function * () {
+    for (var i = 0; true; i++) {
+      var datas = yield Data.find({
+        done: false
+      }).skip(i).limit(1).exec();
 
-  var titles = yield[
-    getTitle(datas[0]),
-    getTitle(datas[1]),
-    getTitle(datas[2]),
-    getTitle(datas[3]),
-    getTitle(datas[4])
-  ];
+      var data = datas[0];
 
-  for (var i = 0; i )
-})();
-});
+      if (!data) {
+        break;
+      }
+
+      data.title = yield getTitle(data.url);
+      data.title = data.title.replace(/\n/g, '');
+      data.done = true;
+
+      yield data.put();
+
+      console.log(i, data.title);
+    }
+  })();
+
 }, 3000);
