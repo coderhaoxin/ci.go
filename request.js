@@ -4,49 +4,38 @@ var config = require('./config'),
   path = require('path'),
   debug = require('debug')('parse:run'),
   co = require('co'),
-  dom = require('jsdom');
+  urllib = require('co-urllib'),
+  jschardet = require('jschardet'),
+  iconv = require('iconv-lite'),
+  $ = require('jparser');
 
 var filepath = path.resolve(__dirname, config.file),
   extname = path.extname(config.file);
 debug('filepath: %s, extname %s', filepath, extname);
 
-function getTitleFromUrl(url) {
-  return function(done) {
-    // console.log('start:', url);
+function * getTitleFromUrl(url) {
+  var res = yield urllib.request(url);
 
-    var t = setTimeout(function() {
-      var e = new Error('timeout');
+  var code = jschardet.detect(res.data).encoding;
+  var text;
 
-      console.log('timeout 3000');
+  console.log(code);
 
-      done(e);
-    }, 3000);
+  if (code === 'GB2312') {
+    text = iconv.decode(res.data, 'gbk');
+  } else {
+    text = res.data.toString();
+  }
 
-    dom.env(url, function(errors, window) {
-      if (errors) {
-        done(errors);
-      } else {
-        var title = '无标题';
-        try {
-          title = window.document.querySelector('title').text;
-        } catch (e) {
-          debug('error:', e);
-        }
+  var root = $(text);
+  var title = root.find('title').text() || '无标题';
 
-        clearTimeout(t);
-
-        // console.log('get:', url);
-
-        done(null, title);
-      }
-    });
-  };
+  return title;
 }
 
 var mongoose = require('mongoose');
 require('./to-db');
 var Data = mongoose.model('data');
-
 
 function * getTitle(url) {
   var title = '无标题';
@@ -54,7 +43,7 @@ function * getTitle(url) {
   try {
     title = yield getTitleFromUrl(url);
   } catch (e) {
-    debug('error:', e);
+    console.error(e);
   }
 
   return title;
@@ -78,7 +67,7 @@ setTimeout(function() {
       data.title = data.title.replace(/\n/g, '');
       data.done = true;
 
-      yield data.put();
+      // yield data.put();
 
       console.log(i, data.title);
     }
