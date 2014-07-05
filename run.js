@@ -48,8 +48,14 @@ csv
     co(function * () {
       var url01, url02, url03, url04, url05, data01, data02, data03, data04, data05;
 
+      var csvStream = csv.createWriteStream({headers:true}),
+      writableStream = fs.createWriteStream(config.dist);
+      writableStream.on('finished', function() {
+          console.info('finished');
+        });
+      csvStream.pipe(writableStream);
+
       for (var i = 0; i < origin.length; i += 5) {
-        if (i > 10000) break;
         data01 = origin[i];
         data02 = origin[i + 1];
         data03 = origin[i + 2];
@@ -74,7 +80,7 @@ csv
           title04 = '无标题',
           title05 = '无标题';
 
-        console.log(url01, url02, url03, url04, url05);
+        // console.log(url01, url02, url03, url04, url05);
 
         try {
           var thunks = [
@@ -102,19 +108,11 @@ csv
         data04.push(title04);
         data05.push(title05);
 
-        result.push(data01);
-        result.push(data02);
-        result.push(data03);
-        result.push(data04);
-        result.push(data05);
+        csvStream.write(data01);
+        csvStream.write(data02);
+        csvStream.write(data03);
+        csvStream.write(data04);
+        csvStream.write(data05);
       }
-
-      csv
-        .writeToStream(fs.createWriteStream(config.dist), result, {
-          headers: true
-        }).on('finished', function() {
-          console.info('finished');
-        });
-
     })();
   });
