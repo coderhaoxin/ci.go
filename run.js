@@ -6,8 +6,7 @@ var config = require('./config'),
   co = require('co'),
   gather = require('co-gather'),
   dom = require('jsdom'),
-  csv = require('fast-csv'),
-  fs = require('fs');
+  csv = require('fast-csv');
 
 var filepath = path.resolve(__dirname, config.file),
   extname = path.extname(config.file);
@@ -20,6 +19,11 @@ var result = [];
 
 function getTitleFromUrl(url) {
   return function(done) {
+    var t = setTimeout(function() {
+      var e = new Error('timeout');
+      done(e);
+    }, 3000);
+
     dom.env(url, function(errors, window) {
       if (errors) {
         done(errors);
@@ -31,16 +35,21 @@ function getTitleFromUrl(url) {
           debug('error:', e);
         }
 
+        clearTimeout(t);
+
         done(null, title);
       }
     });
   };
 }
 
-function write(data) {
+function write(data, i) {
   return function(done) {
+    var dist = config.dist,
+      csvpath = dist.replace(/.csv$/, '-' + i + '.csv');
+
     csv
-      .writeToPath(config.dist, data, {
+      .writeToPath(csvpath, data, {
         headers: true
       })
       .on('finish', function() {
@@ -61,7 +70,6 @@ csv
       var url01, url02, url03, url04, url05, data01, data02, data03, data04, data05;
 
       for (var i = 0; i < origin.length; i += 5) {
-        if (i > 50) break;
         data01 = origin[i];
         data02 = origin[i + 1];
         data03 = origin[i + 2];
@@ -119,11 +127,15 @@ csv
         result.push(data04);
         result.push(data05);
 
-        yield write(result);
+        console.log(i);
 
-        console.log(i, 'done');
+        if ((i >= 5000) && (i % 5000) === 0) {
+          yield write(result, i);
 
-        result = [];
+          console.log(i, 'done');
+
+          result = [];
+        }
       }
     })();
   });
