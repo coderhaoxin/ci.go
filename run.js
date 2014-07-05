@@ -19,6 +19,6 @@ setInterval(function() {
 }, 10000);
 
 for (i = 0; i < total; i += interval) {
-  var result = cp.spawnSync('node', ['--harmony', execfile, i, interval]);
-  console.log(i, result);
+  cp.spawnSync('node', ['--harmony', execfile, i, interval]);
+  console.log(i);
 }
