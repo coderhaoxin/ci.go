@@ -6,55 +6,70 @@ var config = require('./config'),
   co = require('co'),
   dom = require('jsdom'),
   csv = require('fast-csv'),
-  xls2json = require('./lib/xls2json'),
-  xlsx2json = require('./lib/xlsx2json');
+  fs = require('fs'),
+  jschardet = require('jschardet'),
+  iconv = require('iconv-lite');
 
 var filepath = path.resolve(__dirname, config.file),
   extname = path.extname(config.file);
 debug('filepath: %s, extname %s', filepath, extname);
 
-// co(function * () {
-//   var jsonPath, jsonData;
-
-//   if (extname === '.xls') {
-//     jsonPath = yield xls2json(filepath);
-//   } else if (extname === '.xlsx') {
-//     jsonPath = yield xlsx2json(filepath);
-//   } else {
-//     console.warn('unknown file');
-//   }
-
-//   console.info('parse', extname, 'success');
-
-//   jsonData = require(jsonPath);
-
-//   console.log(jsonData.length)
-
-//   debug('parsed data: ', jsonData.length);
-// })();
-
 var csv = require('fast-csv');
 
+var origin = [];
 var result = [];
+
+function getTitleFromUrl(url) {
+  return function(done) {
+    dom.env(url, function(errors, window) {
+      if (errors) {
+        done(errors);
+      } else {
+        var title = '无标题';
+        try {
+          title = window.document.querySelector('title').text;
+        } catch (e) {}
+
+        done(null, title);
+      }
+    });
+  };
+}
 
 csv
   .fromPath(filepath)
   .on('record', function(data) {
-    // var url;
-    // try {
-    //   url = data[8].split('=')[1];
-    // } catch (e) {}
-    // console.log(url);
-
-    dom.env(
-      url,
-      function(errors, window) {
-        if (errors) {
-          console.log(errors);
-        }
-      }
-    );
+    origin.push(data);
   })
   .on('end', function() {
     console.log('done');
+
+    co(function * () {
+      var url, data;
+
+      for (var i = 0; i < origin.length; i++) {
+        data = origin[i];
+        try {
+          url = data[8].split('=')[1];
+        } catch (e) {}
+        console.log(url);
+
+        var title = '无标题';
+
+        try {
+          title = yield getTitleFromUrl(url);
+        } catch (e) {}
+
+        data.push(title);
+
+        result.push(data);
+      }
+
+      csv
+        .writeToStream(fs.createWriteStream(config.dist), result, {
+          headers: true
+        }).on('finished', function() {
+          console.info('finished');
+        });
+    })();
   });
