@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-  file: './files/csv.csv',
+  file: './files/yuzhou.csv',
   temp: './files',
   dist: './files/result.csv'
 };
