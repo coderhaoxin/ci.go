@@ -7,12 +7,7 @@ var config = require('./config'),
   json2xls = require('json2xls');
 
 var filepath = path.resolve(__dirname, config.file);
-
-var csv = require('fast-csv');
-
-var origin = [];
 var result = [];
-
 
 csv
   .fromPath(filepath)
@@ -37,8 +32,17 @@ csv
   .on('end', function() {
     console.log('parse csv done');
 
-    console.log(origin[1]);
-    var xls = json2xls(result);
+    console.log(result[0]);
 
-    fs.writeFileSync('data.xlsx', xls, 'binary');
+    var total = result.length;
+    var xls, end;
+    for (var i = 0; i + 5000 < total; i += 5000) {
+      end = i + 5000;
+      if (end > total) {
+        end = total;
+      }
+      xls = json2xls(result.slice(i, end));
+      console.log('write file');
+      fs.writeFileSync('data-' + i + '-' + end + '.xls', xls, 'binary');
+    }
   });
