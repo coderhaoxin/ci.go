@@ -23,7 +23,19 @@
       })
     });
 
-    $.get('http://www.taotaosou.com/uc/isLogin', function(data) {
+    $.ajax({
+      url: 'http://www.taotaosou.com/uc/isLogin',
+      method: 'GET',
+      success: function(data) {
+        console.log(data);
+      }
+    });
+
+    $.get('http://uc.taotaosou.com/isLogin', function(data) {
+      console.log(data);
+    });
+
+    $.get('http://m.taotaosou.com/isLogin', function(data) {
       console.log(data);
     });
   </script>
