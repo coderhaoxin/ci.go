@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>index</title>
+  <script src="http://localhost:3000/jquery-1.11.1.js"></script>
+  <script src="http://localhost:3000/jquery.form.js"></script>
+</head>
+<body>
+  <form method="POST" enctype="multipart/form-data" action="http://uc.taotaosou.com/uploadHead">
+    <input type="file" name="imgFile">
+    <button type="submit">xxoo</button>
+  </form>
+  <script>
+    document.domain = "taotaosou.com";
+
+    $('form').on('submit', function(e) {
+      e.preventDefault(); // prevent native submit
+      $(this).ajaxSubmit({
+        success: function(xo) {
+          console.log(xo);
+        }
+      })
+    });
+
+    $.get('http://www.taotaosou.com/uc/isLogin', function(data) {
+      console.log(data);
+    });
+  </script>
+</body>
+</html>
