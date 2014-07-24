@@ -19,6 +19,9 @@
     $('form').on('submit', function(e) {
       e.preventDefault(); // prevent native submit
       $(this).ajaxSubmit({
+        xhrFields: {
+          withCredentials: true
+        },
         success: function(xo) {
           console.log(xo);
         }
