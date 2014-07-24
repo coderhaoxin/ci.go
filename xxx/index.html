@@ -11,8 +11,6 @@
     <input type="file" name="imgFile">
     <button type="submit">xxoo</button>
   </form>
-  <img src="http://uc.taotaosou.com/isLogin" alt="uc.">
-  <img src="http://www.taotaosou.com/uc/isLogin" alt="www.">
   <script>
     document.domain = "taotaosou.com";
 
@@ -29,28 +27,8 @@
     });
 
     $.ajax({
-      url: 'http://www.taotaosou.com/uc/isLogin',
-      cache: false,
-      // crossDomain: true,
-      // headers: {
-      //   'Cookie': document.cookie
-      // },
-      method: 'GET',
-      xhrFields: {
-        withCredentials: true
-      },
-      success: function(data) {
-        console.log(data);
-      }
-    });
-
-    $.ajax({
       url: 'http://uc.taotaosou.com/isLogin',
       cache: false,
-      // crossDomain: true,
-      // headers: {
-      //   'Cookie': document.cookie
-      // },
       method: 'GET',
       xhrFields: {
         withCredentials: true
