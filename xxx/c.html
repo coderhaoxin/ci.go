@@ -9,8 +9,9 @@
   <script>
     setTimeout(function() {
       alert(1);
-      window.close();
-      window.location = "o.html";
+      // window.close();
+      window.opener.xxoo();
+      // window.location = "o.html";
       alert(2);
     }, 1000);
   </script>
