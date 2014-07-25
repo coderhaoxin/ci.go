@@ -6,7 +6,7 @@ var app = koa();
 
 app.use(function * (next) {
   yield * next;
-  this.set('Access-Control-Allow-Origin', '*');
+  // this.set('Access-Control-Allow-Origin', '*');
 });
 
 app.use(serve('.'));
