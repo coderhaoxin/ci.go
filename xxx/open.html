@@ -7,42 +7,17 @@
 <body>
   <div>
     <h2>微 博</h2>
-    <a href="#" onclick="xxoo()">微博登录</a>
+    <a href="http://www.taotaosou.com/uc/auth_weibo?isMobile=true">微博登录</a>
   </div>
   <hr>
   <div>
     <h2>QQ</h2>
-    <a href="#" onclick="xxooxo()">QQ登录</a>
+    <a href="http://www.taotaosou.com/uc/auth_qq?isMobile=true">QQ登录</a>
   </div>
   <hr>
   <div>
     <h2>淘宝</h2>
-    <a href="#" onclick="xxooxxoo()">淘宝登录</a>
+    <a href="http://www.taotaosou.com/uc/auth_taobao?isMobile=true">淘宝登录</a>
   </div>
-  <script>
-    document.domain = "taotaosou.com";
-     // var subwin;
-
-    var fuck = function(msg) {
-      // subwin.close();
-      alert(msg);
-      console.log(msg);
-    };
-
-    window.tell_me_auth_result = fuck;
-    window.__unknown_window_chanel = fuck;
-
-    function xxoo() {
-      window.open('https://api.weibo.com/oauth2/authorize?client_id=3738555333&response_type=code&redirect_uri=http://www.taotaosou.com/uc/token_weibo_auth_callback.do#tell_me_auth_result', 'weiboLogin', 'width=400; height=400,');
-    }
-
-    function xxooxo() {
-      window.open('http://openapi.qzone.qq.com/oauth/show?which=ConfirmPage&display=pc&client_id=101018145&response_type=code&redirect_uri=http://www.taotaosou.com/uc/token_qq_auth_callback.do&scope=add_share,check_page_fans,add_idol,get_user_info,get_info,add_pic_t,add_t,get_fanslist,get_other_info,get_idollist#tell_me_auth_result', 'qqLogin', 'width=400; height=400;');
-    }
-
-    function xxooxxoo() {
-      window.open('https://oauth.taobao.com/authorize?client_id=21398201&response_type=code&redirect_uri=http://www.taotaosou.com/uc/token_taobao_auth_callback.do#tell_me_auth_result', 'taobaoLogin', 'width=400; height=400');
-    }
-  </script>
 </body>
 </html>
