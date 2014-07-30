@@ -20,6 +20,7 @@
     "co-urllib": "^0.2.3",
     "debug": "^1.0.2",
     "fast-csv": "^0.4.1",
+    "flexboxgrid": "^1.1.1",
     "iconv-lite": "^0.4.3",
     "jparser": "0.0.2",
     "jschardet": "^1.1.0",
