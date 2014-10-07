@@ -1,0 +1,8 @@
+.DS_Store
+
+*.a
+*.o
+*.out
+
+static/lib/
+static/node_modules/

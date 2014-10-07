@@ -1,0 +1,15 @@
+{
+  "name": "ci.go",
+  "version": "0.0.0",
+  "homepage": "https://github.com/coderhaoxin/ci.go",
+  "authors": [
+    "haoxin <coderhaoxin@outlook.com>"
+  ],
+  "description": "a CI service based on docker and drone",
+  "main": "app.js",
+  "license": "MIT",
+  "dependencies": {
+    "angular": "~1.2.26",
+    "angular-material": "~0.0.3"
+  }
+}
