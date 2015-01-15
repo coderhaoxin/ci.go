@@ -1,0 +1,17 @@
+{
+  "name": "porter",
+  "private": true,
+  "scripts": {
+    "start": "",
+    "test": ""
+  },
+  "author": "haoxin",
+  "license": "MIT",
+  "devDependencies": {
+    "jasmine-core": "^2.1.3",
+    "karma": "^0.12.31",
+    "karma-chrome-launcher": "^0.1.7",
+    "karma-coverage": "^0.2.7",
+    "karma-jasmine": "^0.3.4"
+  }
+}

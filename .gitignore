@@ -1,8 +1,4 @@
-.DS_Store
-
-*.a
-*.o
-*.out
-
+bower_components/
+node_modules/
 static/lib/
-static/node_modules/
+coverage/
